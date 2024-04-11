@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./demo.css">
+    <title>Lucky Round</title>
+  </head>
+<body>
+  <div class="layout-checkphonenumber">
+    <form class="spin_form_container_checkphonenumber">
+      <div class="spin_form_checkphonenumber">
+        <div class="spin_form_title_checkphonenumber">
+          <img
+            src="https://www.adcvn.com/wp-content/uploads/2019/03/Logo-ADC.png"
+          />
+          <p class="spin_form_p_checkphonenumber">Vui lòng nhập số điện thoại để hệ thống kiểm tra !!!</p>
+          <div class="loader hidden" id="loader"></div>
+        </div>
+        <div class="spin_form_content_checkphonenumber">
+          <div class="spin_form_input_checkphonenumber">
+            <input required type="text" placeholder="sdt..." id="phoneI" />
+          </div>
+          <div class="spin_form_btn_checkphonenumber">
+            <a onclick=" checkPhonenumber()">Kiểm tra</a>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="layout-main">
+    <div class="spiner_container">
+      <img
+        src="https://raw.githubusercontent.com/namdh18/roundlucky/main/circle.png"
+        alt=""
+        class="spiner"
+      />
+      <img
+        src="https://raw.githubusercontent.com/namdh18/roundlucky/main/spiner.png"
+        alt=""
+        class="spiner_btn"
+      />
+    </div>
+    <form class="spin_form_container">
+      <div class="spin_form">
+        <div class="spin_form_title">
+          <img
+            src="https://raw.githubusercontent.com/namdh18/roundlucky/main/5555.jpeg"
+          />
+          <p class="spin_form_p">Xin chúc mừng!!!</p>
+          <h2></h2>
+        </div>
+        <div class="spin_form_content">
+          <!--
+          <div class="spin_form_btn btn_confirm">
+            <a onclick="submitToGoogleForm()">Xác nhận</a>
+          </div>
+        -->
+          <div class="spin_form_btn" id = "btn_back">
+            <a onclick="spinerBack()">Thoát</a>
+          </div>
+        </div>
+      </div>
+      <div class="spin_overlay"></div>
+    </form>
+  </div>
+<script>
+      const layoutCheckphonenumber = document.querySelector(".layout-checkphonenumber")
+      const spin = document.querySelector(".spiner");
+      const spinBtn = document.querySelector(".spiner_btn");
+      //const check = localStorage.getItem("jo22o312o2rodjo2jo1312");
+      let checkname = "";
+      let spined = "";
+      const rewards = [
+        "Macbook Air M2",
+        "Voucher 500-CHF",
+        "Voucher 300-CHF",
+        "Voucher 200-CHF",
+        "Voucher 100-CHF", // Khách kêu quay là trúng nên ko thêm cái giải quay hụt
+      ];
+      function spiner()
+            {
+              const random = Math.floor(Math.random() * 100);
+              console.log(random);
+                if (random < 5) {
+                  spined = rewards[0];
+                  spin.style.transform = "rotate(1496deg)";
+                  console.log( spined);
+                  
+                } else if (random >= 5 && random < 30) {
+                  spined = rewards[1];
+                  spin.style.transform = "rotate(1620deg)";
+                  console.log( spined);
+                  
+                } else if (random >= 30 && random < 60) {
+                  spined = rewards[2];
+                  spin.style.transform = "rotate(1672deg)";
+                  console.log( spined);
+                  
+                } else if (random >= 60 && random < 80) {
+                  spined = rewards[3];
+                  spin.style.transform = "rotate(1797deg)";
+                  console.log( spined);
+                
+                } else {
+                  spined = rewards[4];
+                  spin.style.transform = "rotate(1552deg)";
+                  console.log( spined);
+                
+                } 
+                setTimeout(() => {
+                  layoutCheckphonenumber.style.zindex = "0";
+                  document.querySelector(".spin_form_title h2").innerHTML = `Bạn nhận được <br/> ${spined}`;
+                  document.querySelector(".spin_form_container").classList.add("active");
+                  reward(spined);
+                }
+                , 5500);
+            }
+              
+
+      spinBtn.onclick = () => {
+        spiner();
+        spinBtn.style.pointerEvents = "none";
+      };
+    function checkPhonenumber()
+      {
+        //load andimation
+        document.getElementById('loader').classList.remove('hidden');
+        document.querySelector(".spin_form_p_checkphonenumber").innerHTML = 'Hệ thống đang kiểm tra....';
+        document.querySelector(".spin_form_p_checkphonenumber").style.color="red";
+        const phone = document.getElementById("phoneI").value;
+
+          // Define the URL of the API endpoint
+          const apiUrl = 'https://outsourceapi.adcvn.com/api.rsc/NfRpKu_checkRoundLucky';
+          // Define the data you want to send in the POST request
+          const postData = {};
+          postData["phonenumber"] = phone
+          // Define options for the fetch request
+          const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', // Specify the content type as JSON
+              'x-cdata-authtoken':'4h7U6f3n7F1n6f1G1q4a',
+              'Access-Control-Allow-Origin':'*'
+              // Add any other headers as needed
+            },
+            body: JSON.stringify(postData) // Convert the data to JSON format
+          };
+
+            // Make the POST request using Fetch API
+            fetch(apiUrl, requestOptions)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the JSON response
+              })
+              .then(data => {
+                // Handle the response data here
+                console.log('Response data:', data.value);
+                const errCode = data.value[0].errorcode;
+                const message = data.value[0].message;
+                document.getElementById('loader').classList.add('hidden');
+                if (errCode == '1')
+                {
+                  document.querySelector(".spin_form_p_checkphonenumber").innerHTML = message;
+                  document.querySelector(".spin_form_p_checkphonenumber").style.color="red";
+                }
+                else
+                {
+                  layoutCheckphonenumber.style.transform="scale(0)"
+                }
+              })
+              .catch(error => {
+                // Handle any errors that occur during the fetch request
+                console.error('Fetch error:', error);
+              alert(error)
+              }); 
+      }
+      function reward(reward)
+      {
+        const phone = document.getElementById("phoneI").value;
+        // Define the URL of the API endpoint
+          const apiUrl = 'https://outsourceapi.adcvn.com/api.rsc/NfRpKu_RewardRoundLuckyAction';
+          // Define the data you want to send in the POST request
+          const postData = {};
+          postData["phonenumber"] = phone
+          postData["reward"] = reward
+          // Define options for the fetch request
+          const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json', // Specify the content type as JSON
+              'x-cdata-authtoken':'4h7U6f3n7F1n6f1G1q4a',
+              'Access-Control-Allow-Origin':'*'
+              // Add any other headers as needed
+            },
+            body: JSON.stringify(postData) // Convert the data to JSON format
+          };
+
+            // Make the POST request using Fetch API
+            fetch(apiUrl, requestOptions)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the JSON response
+              })
+              .then(data => {
+                // Handle the response data here
+                console.log('Response data:', data.value);
+                const errCode = data.value[0].errorcode;
+                const message = data.value[0].message;
+                document.getElementById('loader').classList.add('hidden');
+                if (errCode == '1')
+                {
+                  document.querySelector(".spin_form_p_checkphonenumber").innerHTML = message;
+                  document.querySelector(".spin_form_p_checkphonenumber").style.color="red";
+                }
+                else
+                {
+                  layoutCheckphonenumber.style.transform="scale(0)"
+                }
+              })
+              .catch(error => {
+                // Handle any errors that occur during the fetch request
+                console.error('Fetch error:', error);
+              alert(error)
+              }); 
+      }
+        function spinerBack()
+            {
+              location.reload();
+            }
+    </script>
+  </body>
+</html>
